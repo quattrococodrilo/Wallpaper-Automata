@@ -1,0 +1,11 @@
+# Reddit
+praw
+
+# Test
+pytest
+
+# Yaml
+pyyaml
+
+# Image
+Pillow
