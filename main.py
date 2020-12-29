@@ -4,14 +4,22 @@ import schedule
 import urllib.request
 import subprocess
 import random
+import pyyaml
 
 path_list = []
 # gets the images from r/CityPorn
 def get_images(amount, time):
     # authenticates app
-    reddit = praw.Reddit(client_id='Client id for your reddit app', client_secret='secret id', user_agent='name of app')
+    reddit = praw.Reddit(
+        client_id='3R4IVryOIbxRRA',
+        client_secret='jwwckxREwcAn0cgTzr8qZFVt0LEZUA',
+        user_agent='WallpaperAutomater'
+    )
     posts = []
-    hot_posts = reddit.subreddit('CityPorn').top(limit=amount, time_filter=str(time)) 
+    hot_posts = reddit.subreddit('CityPorn').top(
+        limit=amount,
+        time_filter=str(time)
+    )
     for post in hot_posts:
         posts.append(post.url)
     # creates jpg file for image
@@ -24,7 +32,7 @@ def get_images(amount, time):
         path = 'Path/to/current/project/folader/' + str(name)
         path_list.append(path)
 
-get_images('How Many Images you want', 'when you want images from, 'today', this 'week', this month, etc...')
+get_images(3, time())
 
 # gets random image's path
 def get_random():
@@ -43,6 +51,7 @@ tell application "Finder"
 set desktop picture to POSIX file "%s"
 end tell
 END"""
+
 # sets background to image
 def set_background(filename):
     subprocess.Popen(tell_script%filename, shell=True)
