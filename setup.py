@@ -11,6 +11,13 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         i.strip() for i in open('requirements.txt').readlines()
-        if not '#' in i
-    ]
+        if not i.startswith('#')
+    ],
+    entry_points={
+        'console_scripts': [
+            'wallpaper-config=bin.config:config',
+            'wallpaper-modify=bin.modify:modify',
+            'wallpaper=bin.wallcommands:wallCommands',
+        ]
+    }
 )
