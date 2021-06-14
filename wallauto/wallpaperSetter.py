@@ -1,8 +1,9 @@
+import os
 import pathlib
 import platform
-import os
 import subprocess
 
+# TODO: Remove support for Windows.
 
 class WallpaperSetter:
 
@@ -10,6 +11,7 @@ class WallpaperSetter:
     def selector(cls, image_path):
         """ Select method according to operative system. """
         system = platform.system().lower()
+
         if 'linux' in system:
             cls._linux(image_path)
         elif 'win' in system:
@@ -22,6 +24,7 @@ class WallpaperSetter:
         """ Method for Linux. """
         desktop = os.environ['XDG_CURRENT_DESKTOP'].lower()
         image_path = pathlib.Path(image_path).absolute()
+
         if 'gnome' in desktop:
             subprocess.run([
                 'gsettings',

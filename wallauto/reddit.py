@@ -12,6 +12,7 @@ class RedditClient:
 
     def _connect(self):
         """ Connects to Reddit. """
+
         return praw.Reddit(
             client_id=self.client_id,
             client_secret=self.client_secret,
@@ -29,6 +30,7 @@ class RedditClient:
             secc (string): filter to be used.
         """
         sub = self._connect().subreddit(subreddit)
+
         if secc == 'top':
             return [post for post in sub.top(
                 limit=limit,

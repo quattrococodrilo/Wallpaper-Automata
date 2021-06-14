@@ -1,8 +1,10 @@
 # Reddit
 praw
 
+# Lintern
+pylint
+
 # Test
-pytest
 
 # Yaml
 pyyaml

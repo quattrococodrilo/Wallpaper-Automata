@@ -1,0 +1,13 @@
+image_depot: "/home/quattro/Documentos/image_depot"
+image_db: "/home/quattro/Documentos"
+delete_on_change: False
+subreddits:
+  - "EarthPorn"
+  - "CityPorn"
+filter: "hot"
+time_filter: "all"
+amount_post: 50
+reddit_account:
+  client_id: "3R4IVryOIbxRRA"
+  client_secret: "jwwckxREwcAn0cgTzr8qZFVt0LEZUA"
+  user_agent: "WallpaperAutomater"

@@ -1,17 +1,20 @@
 """ This module is responsible for managing the wallpaper. """
 
-import platform
 import os
+import platform
 import re
 import subprocess
-from PIL import Image
 from pathlib import Path
 from random import choice
 from urllib.request import urlopen
 from uuid import uuid4
+
+from PIL import Image
+
 from wallauto.reddit import RedditClient
 from wallauto.yamlmanager import YamlManger
 
+# TODO: remove all methods for another operative system.
 
 class WallpaperSetter:
     """ Selects a method to set Wallpaper according
@@ -21,6 +24,7 @@ class WallpaperSetter:
     def selector(cls, image_path):
         """ Select method according to operative system. """
         system = platform.system().lower()
+
         if 'linux' in system:
             cls._linux(image_path)
         elif 'win' in system:
@@ -33,6 +37,7 @@ class WallpaperSetter:
         """ Method for Linux. """
         desktop = os.environ['XDG_CURRENT_DESKTOP'].lower()
         image_path = Path(image_path).absolute()
+
         if 'gnome' in desktop:
             subprocess.run([
                 'gsettings',
@@ -76,6 +81,7 @@ class WallpaperSetter:
         ])
 
 
+# TODO: Create a module only for configurations.
 class WallpaperBuilder:
     """ Methods to get image from Reddit and set it as wallpaper.  """
 
@@ -89,6 +95,7 @@ class WallpaperBuilder:
             config_file (pathlib.Path | string): path to config_file.
         """
         config_file = Path(config_file)
+
         return YamlManger(config_file).get()
 
     def get_reddit_posts(self):
@@ -96,6 +103,7 @@ class WallpaperBuilder:
         client_id = self.config_data['reddit_account']['client_id']
         client_secret = self.config_data['reddit_account']['client_secret']
         user_agent = self.config_data['reddit_account']['user_agent']
+
         if not client_id or not client_secret or not user_agent:
             raise Exception('Reddit credentials not found.')
         reddit = RedditClient(
@@ -112,24 +120,30 @@ class WallpaperBuilder:
                 {'title': post.title,
                  'author': post.author.name,
                  'url': post.url}
+
                 for post in reddit.sub(**payload)
+
                 if post.url.lower().endswith('.jpg')
                 and 'https://i.redd.it/' in post.url
             ]
+
             return posts
         except TypeError as e:
             print(e)
             print('Post list is empty, it could be that '
                   'the post filter is not correct.')
+
             return []
 
     def get_image_size(self, image_data):
         pattern = r'\[\d\d\d\S[\s\S]*\]'
         sizes = re.search(pattern, image_data['title'])
+
         if sizes:
             return re.findall(r'\d\d\d\d', sizes.group())
         image_requested = urlopen(image_data['url'])
         pil_image = Image.open(image_requested)
+
         return pil_image.size
 
     def save_image(self, image_id, image_data):
@@ -144,6 +158,7 @@ class WallpaperBuilder:
             width, heigth = self.get_image_size(image_data)
         except ValueError:
             pass
+
         if width > heigth:
             image_db = Path(self.config_data['image_db'])
             image_db.exists() or image_db.touch()
@@ -166,6 +181,7 @@ class WallpaperBuilder:
                 'path': str(image_path),
             })
             db.set(db_data)
+
             return image_path
         else:
             return
@@ -195,6 +211,9 @@ class WallpaperClient:
     def get_config_file():
         system = platform.system().lower()
         config_file = None
+
+        # TODO: Remove support for Windows.
+
         if 'win' in system:
             config_file = Path().home().joinpath(
                 'AppData', 'Roaming', 'WallpaperAutomater', 'config.yml'
@@ -203,6 +222,7 @@ class WallpaperClient:
             config_file = Path().home().joinpath(
                 '.config', 'WallpaperAutomater', 'config.yml'
             )
+
         return config_file
 
     @classmethod
@@ -210,10 +230,12 @@ class WallpaperClient:
         """ Creates de initial configuration. """
         config_file = cls.get_config_file()
         image_db = config_file.parent / 'image_db.yml'
+
         if not image_db.exists() or force:
             image_db.touch()
             cls.data_struture['image_db'] = str(image_db)
         image_depot = Path().home() / 'image_depot'
+
         if not image_depot.exists() or force:
             try:
                 os.makedirs(image_depot)
@@ -221,6 +243,7 @@ class WallpaperClient:
                 pass
             finally:
                 cls.data_struture['image_depot'] = str(image_depot)
+
         if not config_file.exists() or force:
             try:
                 os.makedirs(config_file.parent)
@@ -236,14 +259,18 @@ class WallpaperClient:
         conf_data = YamlManger(config_file).get()
         wallpaper = WallpaperBuilder(config_file)
         posts = wallpaper.get_reddit_posts()
+
         if len(posts) > 0:
             attemps = 0
             image_id = uuid4().hex
+
             while True or attemps >= conf_data['amount_post']:
                 post = choice(posts)
                 image_path = wallpaper.save_image(image_id, post)
+
                 if image_path:
                     wallpaper.set_wallpaper(image_path)
+
                     return post
                 attemps += 1
 
@@ -256,6 +283,7 @@ class WallpaperClient:
         image = choice(images_data)
         wallpaper = WallpaperBuilder(config_file)
         wallpaper.set_wallpaper(image['path'])
+
         return image
 
 
