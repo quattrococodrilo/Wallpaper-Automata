@@ -10,22 +10,42 @@ class WallConfigs:
     """ Handles configurations. """
 
     var = None
+    settings_dir = None
+    settings_file = None
 
-    def _create_settings(self):
+    def __init__(self):
+        self.settings_dir = pathlib.Path(settings.default_directory)
+        self.settings_file = self.settings_dir / settings.default_file_name
+
+    def create_settings(self):
         """ Creates a directory for settings if not exists. """
 
-        settings_dir = pathlib.Path(settings.default_directory)
-        settings_file = settings_dir / settings.default_file_name
+        if not self.settings_dir.parent.exists():
+            raise Exception(f'{self.settings_dir.parent} not exists.')
 
-        if not settings_dir.parent.exists():
-            raise Exception(f'{settings_dir.parent} not exists.')
+        if not self.settings_dir.exists():
+            self.settings_file.mkdir()
 
-        if not settings_dir.exists():
-            settings_file.mkdir()
-
-        if not settings_file.exists():
-            yml = YamlManger(settings_file)
+        if not self.settings_file.exists():
+            yml = YamlManger(self.settings_file)
             yml.set(settings.schema)
 
-    def _create_image_storage(self):
+        return self
+
+    def create_image_storage(self):
         """Creates image storage."""
+        image_storage = pathlib.Path(settings.schema['image_storage'])
+        image_database = pathlib.Path(settings.schema['image_database'])
+
+        if not image_storage.exists():
+            image_storage.mkdir()
+
+        if not image_database.exists():
+            image_database.touch()
+
+        return self
+
+    def load_custom_user_settings(self):
+        """ Loads custom user settings. """
+
+        return self

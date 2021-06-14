@@ -3,6 +3,7 @@ import unittest
 
 import wallauto.settings as settings
 from wallauto.wall_configs import WallConfigs
+from wallauto.yamlmanager import YamlManger
 
 
 class TestConfigMethods(unittest.TestCase):
@@ -10,10 +11,17 @@ class TestConfigMethods(unittest.TestCase):
 
 
     wall_conf = None
-    test_dir = pathlib.Path(__file__).parent / '../data/test_area'
+    test_dir = None
+    settings_file = None
+    image_storage = None
+    image_database = None
 
     def setUp(self):
         """ Initial configuration. """
+
+        self.test_dir = pathlib.Path(__file__).parent.parent / 'data/test_area'
+        self.settings_file = self.test_dir / settings.default_file_name
+        settings.default_directory = self.test_dir
 
         if not self.test_dir.exists():
             self.test_dir.mkdir()
@@ -23,34 +31,43 @@ class TestConfigMethods(unittest.TestCase):
     def test_create_settings(self):
         """ Test create settings. """
 
-        settings.default_directory = self.test_dir
+        self.wall_conf.create_settings()
 
-        settings_file = self.test_dir / settings.default_file_name
-
-        self.wall_conf._create_settings()
-
-        self.assertTrue(settings_file.exists())
-
-        if settings_file.exists():
-            settings_file.unlink()
+        self.assertTrue(self.settings_file.exists())
 
     def test_create_image_storage(self):
         """Test create image storage."""
 
-        settings.schema['image_storage'] = self.test_dir / 'image_storage'
+        self.image_storage = self.test_dir / 'image_storage'
+        settings.schema['image_storage'] = self.image_storage
 
-        database = self.test_dir / 'image_storage.database'
+        self.image_database = self.test_dir / 'image_db.database'
+        settings.schema['image_database'] = self.image_database
 
-        settings.schema['database']['path'] = self.test_dir
-
-        self.wall_conf._create_image_storage()
+        self.wall_conf.create_image_storage()
 
         self.assertTrue(settings.schema['image_storage'].exists())
 
-        self.assertTrue(database)
+        self.assertTrue(settings.schema['image_database'].exists())
 
-        if settings.schema['image_storage'].exists():
-            settings.schema['image_storage'].rmdir()
+    def test_load_custom_user_settings(self):
+        """ Test load custom user settings"""
 
-        if settings.schema['database'].exists():
-            settings.schema['database'].unlink()
+        yml = YamlManger(self.test_dir / 'test_settings.yml')
+        custom_settings = yml.get()
+
+        settings.default_file_name = 'test_settings.yml'
+
+        self.wall_conf.load_custom_user_settings()
+
+        self.assertDictEqual(settings.schema, custom_settings)
+
+    def tearDown(self):
+        if self.settings_file.exists():
+            self.settings_file.unlink()
+
+        if self.image_storage.exists():
+            self.image_storage.rmdir()
+
+        if self.image_database.exists():
+            self.image_database.unlink()

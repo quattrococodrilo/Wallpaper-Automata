@@ -5,16 +5,13 @@ default_directory = pathlib.Path.home() / '.config/wallauto/'
 default_file_name = 'settings.yml'
 
 schema = {
-    'database': {
-        'path': str(default_directory / 'image_storage.database'),
-        'name': 'image_storage.database',
-    },
+    'image_database': str(default_directory / 'image_db.database'),
     'image_storage': str(default_directory / 'image_storage'),
+    'remove_on_change': True,
     'secret': {
         'provider': 'pexels',
         'api_key': '',
     },
-    'remove_on_change': True,
 }
 
 # Pexels
