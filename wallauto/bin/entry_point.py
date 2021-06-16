@@ -4,11 +4,21 @@ import sys
 
 from wallauto.bin.config import config_commands
 
-title = """
+
+def help_commands(arguments = {}):
+    """ shows help """
+    title = """
 ╦ ╦┌─┐┬  ┬  ┌─┐┌─┐┌─┐┌─┐┬─┐  ┌─┐┬ ┬┌┬┐┌─┐┌┬┐┌─┐┌┬┐┌─┐
 ║║║├─┤│  │  ├─┘├─┤├─┘├┤ ├┬┘  ├─┤│ │ │ │ ││││├─┤ │ ├─┤
 ╚╩╝┴ ┴┴─┘┴─┘┴  ┴ ┴┴  └─┘┴└─  ┴ ┴└─┘ ┴ └─┘┴ ┴┴ ┴ ┴ ┴ ┴
 """
+    print(title)
+
+    for key, value in arguments.items():
+        print(f'{key}\t{value["description"]}')
+
+    print('\nEnjoy and share this program :)')
+
 
 def selector():
     """ Selects de commands. """
@@ -20,21 +30,19 @@ def selector():
         }
     }
 
-    def help():
-        print(title)
-
     argument = None
 
     try:
         argument = sys.argv[1]
     except IndexError:
-        help()
+        help_commands(main_arguments)
+        sys.exit()
 
     if argument in main_arguments:
         option = main_arguments[argument]
         option['command']()
     else:
-        help()
+        help_commands(main_arguments)
 
 if __name__ == '__main__':
     selector()

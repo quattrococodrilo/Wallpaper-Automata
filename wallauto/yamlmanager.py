@@ -4,7 +4,7 @@ import yaml
 import pathlib
 
 
-class YamlManger:
+class YamlManager:
     file_path = None
 
     def __init__(self, file_path):

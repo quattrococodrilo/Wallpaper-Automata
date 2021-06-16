@@ -3,7 +3,7 @@
 import pathlib
 
 import wallauto.settings as settings
-from wallauto.yamlmanager import YamlManger
+from wallauto.yamlmanager import YamlManager
 
 
 class WallConfigs:
@@ -27,7 +27,7 @@ class WallConfigs:
             self.settings_dir.mkdir()
 
         if not self.settings_file.exists():
-            yml = YamlManger(self.settings_file)
+            yml = YamlManager(self.settings_file)
             yml.set(settings.schema)
 
         return self
@@ -51,7 +51,7 @@ class WallConfigs:
         if not self.settings_file.exists():
             self.create_settings()
 
-        yml = YamlManger(self.settings_file)
+        yml = YamlManager(self.settings_file)
         settings.schema = yml.get()
 
         return self

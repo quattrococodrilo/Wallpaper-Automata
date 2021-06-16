@@ -3,7 +3,7 @@ import unittest
 
 import wallauto.settings as settings
 from wallauto.wall_configs import WallConfigs
-from wallauto.yamlmanager import YamlManger
+from wallauto.yamlmanager import YamlManager
 
 
 class TestConfigMethods(unittest.TestCase):
@@ -55,7 +55,7 @@ class TestConfigMethods(unittest.TestCase):
 
         settings_file = self.test_dir / 'test_settings.yml'
 
-        yml = YamlManger(settings_file)
+        yml = YamlManager(settings_file)
         custom_settings = yml.get()
 
         self.wall_conf.settings_file = settings_file
