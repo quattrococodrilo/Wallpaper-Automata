@@ -1,23 +1,23 @@
 import setuptools
 
+setuptools.setup()
 
-setuptools.setup(
-    name='WallpaperAutomater',
-    version='0.1',
-    description='Sets automatically a wallpaper from Reddit.',
-    author='Fernando Cruz',
-    author_email='quattrococodrilo@gmail.com',
-    licence='MIT',
-    packages=setuptools.find_packages(),
-    install_requires=[
-        i.strip() for i in open('requirements.txt').readlines()
-        if not i.startswith('#')
-    ],
-    entry_points={
-        'console_scripts': [
-            'wallpaper-config=bin.config:config',
-            'wallpaper-modify=bin.modify:modify',
-            'wallpaper=bin.wallcommands:wallCommands',
-        ]
-    }
-)
+# setuptools.setup(
+#     name='WallpaperAutomater',
+#     version='0.1',
+#     description='Sets automatically a wallpaper from Reddit.',
+#     author='Fernando Cruz',
+#     author_email='quattrococodrilo@gmail.com',
+#     licence='MIT',
+#     packages=setuptools.find_packages(),
+#     install_requires=[
+#         i.strip() for i in open('requirements.txt').readlines()
+# 
+#         if not i.startswith('#')
+#     ],
+#     entry_points={
+#         'console_scripts': [
+#             'wallpaper = wallauto.bin:entry_point',
+#         ]
+#     }
+# )

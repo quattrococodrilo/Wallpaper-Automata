@@ -1,6 +1,0 @@
-image_database: "something"
-image_storage: "something"
-remove_on_change: "something"
-secret:
-  provider: "pexels"
-  api_key: ""

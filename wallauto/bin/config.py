@@ -1,37 +1,31 @@
 import argparse
-from wallauto.wallpaper import WallpaperClient
+
+from wallauto.wall_configs import WallConfigs
 
 
 # Initial configuration
 # ------------------------------------------------------------
-def config():
+def config_commands():
+    wall_conf = WallConfigs()
+
     config = argparse.ArgumentParser(
         prog='conf',
-        description=('Creates a program configurations.'))
+        description=('Creates a program configurations.')
+    )
+
     config.add_argument(
-        'Init',
+        'init',
         metavar='init',
-        help='Set configurations.'
+        help='Set start configurations.'
     )
-    config.add_argument(
-        '-f',
-        '--force',
-        action='store_true',
-        help=('Force regenerate essentials configurations and files. '
-              'Be careful!')
-    )
+
     config_args = config.parse_args()
-    if config_args.Init:
-        confirm = False
-        if config_args.force:
-            confirm = input('WARNING: This process can remove your'
-                            ' custom configurations. Do you want'
-                            'continue? y/n: ')
-            confirm = True if confirm == 'y' else False
-        WallpaperClient.init_conf(force=confirm)
-    else:
-        print('Select an argument.')
+
+    if config_args.init:
+        wall_conf.create_settings()\
+            .load_custom_user_settings()\
+            .create_image_storage()
 
 
 if __name__ == "__main__":
-    config()
+    config_commands()

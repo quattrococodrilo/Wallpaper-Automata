@@ -24,7 +24,7 @@ class WallConfigs:
             raise Exception(f'{self.settings_dir.parent} not exists.')
 
         if not self.settings_dir.exists():
-            self.settings_file.mkdir()
+            self.settings_dir.mkdir()
 
         if not self.settings_file.exists():
             yml = YamlManger(self.settings_file)
@@ -47,5 +47,11 @@ class WallConfigs:
 
     def load_custom_user_settings(self):
         """ Loads custom user settings. """
+
+        if not self.settings_file.exists():
+            self.create_settings()
+
+        yml = YamlManger(self.settings_file)
+        settings.schema = yml.get()
 
         return self

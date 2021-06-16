@@ -53,21 +53,32 @@ class TestConfigMethods(unittest.TestCase):
     def test_load_custom_user_settings(self):
         """ Test load custom user settings"""
 
-        yml = YamlManger(self.test_dir / 'test_settings.yml')
+        settings_file = self.test_dir / 'test_settings.yml'
+
+        yml = YamlManger(settings_file)
         custom_settings = yml.get()
 
-        settings.default_file_name = 'test_settings.yml'
+        self.wall_conf.settings_file = settings_file
 
         self.wall_conf.load_custom_user_settings()
 
         self.assertDictEqual(settings.schema, custom_settings)
 
     def tearDown(self):
-        if self.settings_file.exists():
-            self.settings_file.unlink()
+        try:
+            if self.settings_file.exists():
+                self.settings_file.unlink()
+        except:
+            pass
 
-        if self.image_storage.exists():
-            self.image_storage.rmdir()
+        try:
+            if self.image_storage.exists():
+                self.image_storage.rmdir()
+        except:
+            pass
 
-        if self.image_database.exists():
-            self.image_database.unlink()
+        try:
+            if self.image_database.exists():
+                self.image_database.unlink()
+        except:
+            pass
