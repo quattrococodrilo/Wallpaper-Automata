@@ -18,13 +18,6 @@ class TestPexelsConstructor(unittest.TestCase):
         secrets = yml.get()
         self.api_key = secrets['pexels_api_key']
 
-    def test_set_query(self):
-        """ Test query assignation. """
-        pexels = PexelsConstructor()
-        pexels.query = 'search'
-
-        self.assertEqual('search', pexels.query)
-
     def test_curated_response(self):
         """ Test curated response. """
         pexels = PexelsConstructor()
@@ -36,3 +29,20 @@ class TestPexelsConstructor(unittest.TestCase):
 
         self.assertEqual(30, response['per_page'])
         self.assertEqual(len(response['photos']), 30)
+
+    def test_search_response(self):
+        """ Test search response. """
+        pexels = PexelsConstructor()
+        pexels.api_key = self.api_key
+        pexels.end_point = 'search'
+        pexels.query = 'forest'
+        pexels.orientation = 'landscape'
+        pexels.size = 'medium'
+        pexels.color = 'blue'
+        pexels.locale = 'es-ES'
+        pexels.per_page = 40
+
+        response = pexels.request()
+
+        self.assertEqual(40, response['per_page'])
+        self.assertEqual(len(response['photos']), 40)
