@@ -2,11 +2,11 @@ import pathlib
 import unittest
 
 import wallauto.settings as settings
-from wallauto.providers.pexles_constructor import PexelsConstructor
+from wallauto.providers.pexles import PexelsClient, PexelsConstructor
 from wallauto.yamlmanager import YamlManager
 
 
-class TestPexelsConstructor(unittest.TestCase):
+class TestPexels(unittest.TestCase):
     """ Test Pexels module """
 
     api_key = None
@@ -18,7 +18,10 @@ class TestPexelsConstructor(unittest.TestCase):
         secrets = yml.get()
         self.api_key = secrets['pexels_api_key']
 
-    def test_curated_response(self):
+    # PexelsConstructor
+    # ------------------------------------------------------------
+
+    def test_constructor_curated_response(self):
         """ Test curated response. """
         pexels = PexelsConstructor()
         pexels.api_key = self.api_key
@@ -30,8 +33,10 @@ class TestPexelsConstructor(unittest.TestCase):
         self.assertEqual(30, response['per_page'])
         self.assertEqual(len(response['photos']), 30)
 
-    def test_search_response(self):
+    def test_constructor_search_response(self):
         """ Test search response. """
+        per_page = 20
+
         pexels = PexelsConstructor()
         pexels.api_key = self.api_key
         pexels.end_point = 'search'
@@ -40,9 +45,22 @@ class TestPexelsConstructor(unittest.TestCase):
         pexels.size = 'medium'
         pexels.color = 'blue'
         pexels.locale = 'es-ES'
-        pexels.per_page = 40
+        pexels.per_page = per_page
 
         response = pexels.request()
 
-        self.assertEqual(40, response['per_page'])
-        self.assertEqual(len(response['photos']), 40)
+        self.assertEqual(len(response['photos']), per_page)
+        self.assertEqual(per_page, response['per_page'])
+
+    # PexelsClient
+    # ------------------------------------------------------------
+
+    def test_client_curated(self):
+        curated = PexelsClient.curated(self.api_key)
+
+        self.assertTrue(len(curated) > 0)
+
+    def test_client_search(self):
+        search = PexelsClient.search(self.api_key)
+
+        self.assertTrue(len(search) > 0)
