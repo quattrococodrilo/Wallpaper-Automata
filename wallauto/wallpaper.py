@@ -12,7 +12,7 @@ from uuid import uuid4
 from PIL import Image
 
 from wallauto.reddit import RedditClient
-from wallauto.yamlmanager import YamlManger
+from wallauto.yamlmanager import YamlManager
 
 # TODO: remove all methods for another operative system.
 

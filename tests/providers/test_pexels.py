@@ -2,7 +2,7 @@ import pathlib
 import unittest
 
 import wallauto.settings as settings
-from wallauto.providers.pexles import PexelsClient, PexelsConstructor
+from wallauto.providers.pexels import PexelsClient, PexelsConstructor
 from wallauto.yamlmanager import YamlManager
 
 
